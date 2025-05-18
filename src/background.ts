@@ -1,5 +1,5 @@
 chrome.action.onClicked.addListener((tab: chrome.tabs.Tab) => {
-  const tabId = tab.id;
+  const tabId: number | undefined = tab.id;
   if (!tabId) return;
 
   chrome.scripting
@@ -13,7 +13,7 @@ chrome.action.onClicked.addListener((tab: chrome.tabs.Tab) => {
           .catch((err: Error) => alert(`Failed to copy URL: ${err.message}`));
       },
     })
-    .catch((err) => {
+    .catch((err: Error) => {
       console.error("Script injection failed:", err);
     });
 });
