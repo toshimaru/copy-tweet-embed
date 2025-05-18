@@ -1,6 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Copy Tweet Embed",
+  "action": {
+    "default_title": "Copy URL"
+  },
   "version": "0.0.0",
-  "action": { "default_popup": "index.html" }
+  "permissions": ["activeTab", "scripting", "clipboardWrite"],
+  "background": {
+    "service_worker": "src/background.ts",
+    "type": "module"
+  }
 }
