@@ -1,6 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "CRXJS Vanilla JS Example",
-  "version": "0.0.1",
-  "action": { "default_popup": "index.html" }
+  "name": "Copy Tweet Embed",
+  "action": {
+    "default_title": "Copy URL"
+  },
+  "version": "0.0.0",
+  "permissions": ["activeTab", "scripting", "clipboardWrite"],
+  "background": {
+    "service_worker": "src/background.ts",
+    "type": "module"
+  }
 }
