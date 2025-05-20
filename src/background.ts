@@ -25,7 +25,7 @@ chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
   await chrome.scripting.executeScript({
     target: { tabId },
     func: () => {
-      chrome.runtime.onMessage.addListener((msg, _, _sendResponse) => {
+      chrome.runtime.onMessage.addListener((msg) => {
         if (msg.type === "copyTweetEmbedToClipboard") {
           navigator.clipboard.writeText(msg.html);
         }
