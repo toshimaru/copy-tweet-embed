@@ -43,9 +43,9 @@ chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
   await chrome.scripting.executeScript({
     target: { tabId },
     func: () => {
-      chrome.runtime.onMessage.addListener((msg: TweetEmbedMessage) => {
+      chrome.runtime.onMessage.addListener(async (msg: TweetEmbedMessage) => {
         if (msg.type === "copyTweetEmbedToClipboard") {
-          navigator.clipboard.writeText(msg.html);
+          await navigator.clipboard.writeText(msg.html);
         }
       });
     },
