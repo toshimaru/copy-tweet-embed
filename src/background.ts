@@ -14,15 +14,28 @@ interface TweetEmbedMessage {
   html: string;
 }
 
+async function fetchTweetEmbed(
+  tweetUrl: string,
+): Promise<OEmbedResponse | null> {
+  const response = await fetch(
+    `${OEMBED_API_URL}?url=${encodeURIComponent(tweetUrl)}`,
+  );
+  return (await response.json()) as OEmbedResponse;
+}
+
 chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
   const url = tab.url;
   if (!url) return;
   if (!url.match(/^https:\/\/x\.com\/.+\/status\/\d+/)) return;
 
-  const oembed: OEmbedResponse = await fetch(
-    `${OEMBED_API_URL}?url=${encodeURIComponent(url)}`,
-  ).then((r) => r.json());
-  if (!oembed.html) return;
+  let oembed;
+  try {
+    oembed = await fetchTweetEmbed(url);
+    if (!oembed || !oembed.html) return;
+  } catch (error) {
+    console.error("Error fetching tweet embed:", error);
+    return;
+  }
 
   const tabId = tab.id;
   if (!tabId) return;
