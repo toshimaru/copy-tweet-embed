@@ -14,9 +14,7 @@ interface TweetEmbedMessage {
   html: string;
 }
 
-async function fetchTweetEmbed(
-  tweetUrl: string,
-): Promise<OEmbedResponse | null> {
+async function fetchTweetEmbed(tweetUrl: string): Promise<OEmbedResponse> {
   const response = await fetch(
     `${OEMBED_API_URL}?url=${encodeURIComponent(tweetUrl)}`,
   );
@@ -34,7 +32,6 @@ chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
   let oembed;
   try {
     oembed = await fetchTweetEmbed(url);
-    if (!oembed || !oembed.html) return;
   } catch (error) {
     console.error("Error fetching tweet embed:", error);
     return;
