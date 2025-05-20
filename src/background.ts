@@ -9,6 +9,11 @@ interface OEmbedResponse {
   author_url: string;
 }
 
+interface TweetEmbedMessage {
+  type: string;
+  html: string;
+}
+
 chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
   const url = tab.url;
   if (!url) return;
@@ -25,7 +30,7 @@ chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
   await chrome.scripting.executeScript({
     target: { tabId },
     func: () => {
-      chrome.runtime.onMessage.addListener((msg) => {
+      chrome.runtime.onMessage.addListener((msg: TweetEmbedMessage) => {
         if (msg.type === "copyTweetEmbedToClipboard") {
           navigator.clipboard.writeText(msg.html);
         }
