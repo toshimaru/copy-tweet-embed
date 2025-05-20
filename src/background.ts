@@ -10,7 +10,7 @@ interface OEmbedResponse {
 }
 
 interface TweetEmbedMessage {
-  type: string;
+  type: "copyTweetEmbedToClipboard";
   html: string;
 }
 
