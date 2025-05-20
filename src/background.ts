@@ -20,6 +20,9 @@ async function fetchTweetEmbed(
   const response = await fetch(
     `${OEMBED_API_URL}?url=${encodeURIComponent(tweetUrl)}`,
   );
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  }
   return (await response.json()) as OEmbedResponse;
 }
 
