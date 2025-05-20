@@ -15,6 +15,9 @@ interface TweetEmbedMessage {
 }
 
 async function fetchTweetEmbed(tweetUrl: string): Promise<OEmbedResponse> {
+  if (!tweetUrl.match(/^https:\/\/x\.com\/.+\/status\/\d+/)) {
+    throw new Error("Invalid tweet URL format");
+  }
   const response = await fetch(
     `${OEMBED_API_URL}?url=${encodeURIComponent(tweetUrl)}`,
   );
@@ -27,7 +30,6 @@ async function fetchTweetEmbed(tweetUrl: string): Promise<OEmbedResponse> {
 chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
   const url = tab.url;
   if (!url) return;
-  if (!url.match(/^https:\/\/x\.com\/.+\/status\/\d+/)) return;
 
   let oembed: OEmbedResponse;
   try {
