@@ -17,7 +17,7 @@ chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
     target: { tabId },
     func: () => {
       chrome.runtime.onMessage.addListener((msg, _, _sendResponse) => {
-        if (msg.type === "copyToClipboard") {
+        if (msg.type === "copyTweetEmbedToClipboard") {
           navigator.clipboard.writeText(msg.html);
         }
       });
@@ -25,7 +25,7 @@ chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
   });
 
   chrome.tabs.sendMessage(tabId, {
-    type: "copyToClipboard",
+    type: "copyTweetEmbedToClipboard",
     html: oembed.html,
   });
 });
