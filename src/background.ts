@@ -29,7 +29,7 @@ chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
   if (!url) return;
   if (!url.match(/^https:\/\/x\.com\/.+\/status\/\d+/)) return;
 
-  let oembed;
+  let oembed: OEmbedResponse;
   try {
     oembed = await fetchTweetEmbed(url);
   } catch (error) {
