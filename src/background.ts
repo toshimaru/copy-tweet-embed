@@ -1,11 +1,20 @@
 const OEMBED_API_URL = "https://publish.twitter.com/oembed";
 
+interface OEmbedResponse {
+  version: string;
+  type: "photo" | "video" | "link" | "rich";
+  html: string;
+  url: string;
+  author_name: string;
+  author_url: string;
+}
+
 chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
   const url = tab.url;
   if (!url) return;
   if (!url.match(/^https:\/\/x\.com\/.+\/status\/\d+/)) return;
 
-  const oembed = await fetch(
+  const oembed: OEmbedResponse = await fetch(
     `${OEMBED_API_URL}?url=${encodeURIComponent(url)}`,
   ).then((r) => r.json());
   if (!oembed.html) return;
