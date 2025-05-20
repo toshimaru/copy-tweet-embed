@@ -43,6 +43,8 @@ chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
   await chrome.scripting.executeScript({
     target: { tabId },
     func: () => {
+      // TODO: Move to content-script.js
+      // ref. https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts
       chrome.runtime.onMessage.addListener(async (msg: TweetEmbedMessage) => {
         if (msg.type === "copyTweetEmbedToClipboard") {
           await navigator.clipboard.writeText(msg.html);
