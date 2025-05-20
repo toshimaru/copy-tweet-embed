@@ -1,19 +1,31 @@
-chrome.action.onClicked.addListener((tab: chrome.tabs.Tab) => {
-  const tabId: number | undefined = tab.id;
+const OEMBED_API_URL = "https://publish.twitter.com/oembed";
+
+chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
+  const url = tab.url;
+  if (!url) return;
+  if (!url.match(/^https:\/\/x\.com\/.+\/status\/\d+/)) return;
+
+  const oembed = await fetch(
+    `${OEMBED_API_URL}?url=${encodeURIComponent(url)}`,
+  ).then((r) => r.json());
+  if (!oembed.html) return;
+
+  const tabId = tab.id;
   if (!tabId) return;
 
-  chrome.scripting
-    .executeScript({
-      target: { tabId },
-      func: () => {
-        // Write the current page's URL to the clipboard
-        navigator.clipboard
-          .writeText(window.location.href)
-          .then(() => alert(`URL copied: ${window.location.href}`))
-          .catch((err: Error) => alert(`Failed to copy URL: ${err.message}`));
-      },
-    })
-    .catch((err: Error) => {
-      console.error("Script injection failed:", err);
-    });
+  await chrome.scripting.executeScript({
+    target: { tabId },
+    func: () => {
+      chrome.runtime.onMessage.addListener((msg, _, _sendResponse) => {
+        if (msg.type === "copyTweetEmbedToClipboard") {
+          navigator.clipboard.writeText(msg.html);
+        }
+      });
+    },
+  });
+
+  chrome.tabs.sendMessage(tabId, {
+    type: "copyTweetEmbedToClipboard",
+    html: oembed.html,
+  });
 });
