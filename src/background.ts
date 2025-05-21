@@ -9,11 +9,6 @@ interface OEmbedResponse {
   author_url: string;
 }
 
-interface TweetEmbedMessage {
-  type: "copyTweetEmbedToClipboard";
-  html: string;
-}
-
 async function fetchTweetEmbed(tweetUrl: string): Promise<OEmbedResponse> {
   if (!tweetUrl.match(/^https:\/\/x\.com\/.+\/status\/\d+/)) {
     throw new Error("Invalid tweet URL format");
@@ -41,19 +36,6 @@ chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
 
   const tabId = tab.id;
   if (!tabId) return;
-
-  await chrome.scripting.executeScript({
-    target: { tabId },
-    func: () => {
-      // TODO: Move to content-script.js
-      // ref. https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts
-      chrome.runtime.onMessage.addListener(async (msg: TweetEmbedMessage) => {
-        if (msg.type === "copyTweetEmbedToClipboard") {
-          await navigator.clipboard.writeText(msg.html);
-        }
-      });
-    },
-  });
 
   chrome.tabs.sendMessage(tabId, {
     type: "copyTweetEmbedToClipboard",
