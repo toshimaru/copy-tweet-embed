@@ -10,5 +10,12 @@
   "background": {
     "service_worker": "src/background.ts",
     "type": "module"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://x.com/*"],
+      "js": ["src/content-script.ts"],
+      "run_at": "document_end"
+    }
+  ]
 }
