@@ -38,9 +38,11 @@ function createToast(): HTMLElement {
 
   // Create container
   const container = document.createElement("div");
-  container.style.display = "flex";
-  container.style.alignItems = "center";
-  container.style.gap = "8px";
+  setStyles(container, {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+  });
 
   // Create checkmark icon
   const icon = document.createElement("div");
@@ -49,7 +51,7 @@ function createToast(): HTMLElement {
   // Add text
   const text = document.createElement("span");
   text.innerText = "Copied to clipboard";
-  text.style.fontWeight = "500";
+  setStyles(text, { fontWeight: "500" });
 
   // Append elements
   container.appendChild(icon);
@@ -76,10 +78,9 @@ function showToast() {
   // Trigger a reflow to enable the transition
   void toast.offsetWidth;
 
-  toast.style.opacity = "1";
-
+  setStyles(toast, { opacity: "1" });
   setTimeout(() => {
-    toast.style.opacity = "0";
+    setStyles(toast, { opacity: "0" });
     toast.addEventListener("transitionend", () => {
       document.body.removeChild(toast);
     });
