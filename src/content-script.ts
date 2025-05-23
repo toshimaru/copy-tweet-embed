@@ -29,6 +29,12 @@ const TOAST_STYLES: StyleMap = {
   transition: "opacity 0.3s ease-in-out",
 };
 
+/**
+ * Applies a set of CSS styles to an HTML element.
+ *
+ * @param {HTMLElement} el - The HTML element to which the styles will be applied.
+ * @param {StyleMap} styles - An object representing CSS properties and their values.
+ */
 function setStyles(el: HTMLElement, styles: StyleMap) {
   Object.assign(el.style, styles);
 }
