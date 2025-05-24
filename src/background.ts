@@ -15,6 +15,7 @@ async function fetchTweetEmbed(tweetUrl: string): Promise<OEmbedResponse> {
   }
   const response = await fetch(
     `${OEMBED_API_URL}?url=${encodeURIComponent(tweetUrl)}`,
+    { credentials: "omit" },
   );
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
