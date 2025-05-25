@@ -2,28 +2,28 @@ interface CopyTweetEmbedMessage {
   type: "copyTweetEmbedToClipboard";
   html: string;
 }
-
 interface ErrorMessage {
   type: "showErrorMessage";
   message: string;
 }
 
 type TweetEmbedMessage = CopyTweetEmbedMessage | ErrorMessage;
-
 type StyleMap = Partial<CSSStyleDeclaration>;
 
-const SUCCESS_ICON_SVG = `
+const createSvgIcon = (path: string, fillColor: string) => `
 <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-  <circle cx="10" cy="10" r="10" fill="#2CCD48"/>
-  <path d="M8.33341 12.6434L15.9934 4.98251L17.1727 6.16084L8.33341 15L3.03009 9.69667L4.20842 8.51834L8.33341 12.6434Z" fill="white"/>
+  <circle cx="10" cy="10" r="10" fill="${fillColor}"/>
+  ${path}
 </svg>
 `;
-const ERROR_ICON_SVG = `
-<svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-  <circle cx="10" cy="10" r="10" fill="#E53935"/>
-  <path d="M13.0049 7.29438L12.7077 7.00028L10.0005 9.70743L7.29334 7.00028L6.99609 7.29438L9.70324 10.0015L6.99609 12.7087L7.29334 13.0028L10.0005 10.2956L12.7077 13.0028L13.0049 12.7087L10.2978 10.0015L13.0049 7.29438Z" fill="white" stroke="white"/>
-</svg>
-`;
+const SUCCESS_ICON_SVG = createSvgIcon(
+  '<path d="M8.33341 12.6434L15.9934 4.98251L17.1727 6.16084L8.33341 15L3.03009 9.69667L4.20842 8.51834L8.33341 12.6434Z" fill="white"/>',
+  "#2CCD48",
+);
+const ERROR_ICON_SVG = createSvgIcon(
+  '<path d="M13.0049 7.29438L12.7077 7.00028L10.0005 9.70743L7.29334 7.00028L6.99609 7.29438L9.70324 10.0015L6.99609 12.7087L7.29334 13.0028L10.0005 10.2956L12.7077 13.0028L13.0049 12.7087L10.2978 10.0015L13.0049 7.29438Z" fill="white" stroke="white"/>',
+  "#E53935",
+);
 const TOAST_STYLES: StyleMap = {
   position: "fixed",
   bottom: "24px",
