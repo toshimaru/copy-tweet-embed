@@ -110,15 +110,18 @@ function showToast(message: string, isError = false) {
 }
 
 chrome.runtime.onMessage.addListener(async (msg: TweetEmbedMessage) => {
-  if (msg.type === "copyTweetEmbedToClipboard") {
-    try {
-      await navigator.clipboard.writeText(msg.html);
-      showToast("Copied to clipboard");
-    } catch (error) {
-      console.error("Error copying to clipboard:", error);
-      showToast("Failed to copy to clipboard", true);
-    }
-  } else if (msg.type === "showErrorMessage") {
-    showToast(msg.message, true);
+  switch (msg.type) {
+    case "copyTweetEmbedToClipboard":
+      try {
+        await navigator.clipboard.writeText(msg.html);
+        showToast("Copied to clipboard");
+      } catch (error) {
+        console.error("Error copying to clipboard:", error);
+        showToast("Failed to copy to clipboard", true);
+      }
+      break;
+    case "showErrorMessage":
+      showToast(msg.message, true);
+      break;
   }
 });
