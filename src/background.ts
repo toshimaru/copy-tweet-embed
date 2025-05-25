@@ -36,24 +36,21 @@ chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
   const tabId = tab.id;
   if (!tabId) return;
 
-  let oembed: OEmbedResponse;
   try {
-    oembed = await fetchTweetEmbed(url);
-    
+    const oembed = await fetchTweetEmbed(url);
     chrome.tabs.sendMessage(tabId, {
       type: "copyTweetEmbedToClipboard",
       html: oembed.html,
     });
   } catch (error) {
-    console.error("Error fetching tweet embed:", error);
-    
-    const errorMessage = error instanceof Error 
-      ? error.message 
-      : "Failed to fetch tweet embed";
-    
+    let message = "Failed to fetch tweet embed.";
+    if (error instanceof Error) {
+      message += `\nError: ${error.message}`;
+    }
+    console.error(error);
     chrome.tabs.sendMessage(tabId, {
       type: "showErrorMessage",
-      message: errorMessage
+      message,
     });
   }
 });
