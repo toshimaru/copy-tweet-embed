@@ -11,7 +11,7 @@ interface OEmbedResponse {
 
 async function fetchTweetEmbed(tweetUrl: string): Promise<OEmbedResponse> {
   if (!tweetUrl.match(/^https:\/\/x\.com\/.+\/status\/\d+/)) {
-    throw new Error("Invalid tweet URL format");
+    throw new Error("Invalid tweet URL format.");
   }
   const response = await fetch(
     `${OEMBED_API_URL}?url=${encodeURIComponent(tweetUrl)}`,
@@ -24,7 +24,7 @@ async function fetchTweetEmbed(tweetUrl: string): Promise<OEmbedResponse> {
     },
   );
   if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    throw new Error(`HTTP ${response.status}: ${response.statusText}.`);
   }
   return (await response.json()) as OEmbedResponse;
 }
