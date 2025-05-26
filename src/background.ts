@@ -11,7 +11,7 @@ interface OEmbedResponse {
 
 async function fetchTweetEmbed(tweetUrl: string): Promise<OEmbedResponse> {
   if (!tweetUrl.match(/^https:\/\/x\.com\/.+\/status\/\d+/)) {
-    throw new Error("Invalid tweet URL format");
+    throw new Error("Invalid tweet URL format.");
   }
   const response = await fetch(
     `${OEMBED_API_URL}?url=${encodeURIComponent(tweetUrl)}`,
@@ -24,7 +24,7 @@ async function fetchTweetEmbed(tweetUrl: string): Promise<OEmbedResponse> {
     },
   );
   if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    throw new Error(`HTTP ${response.status}: ${response.statusText}.`);
   }
   return (await response.json()) as OEmbedResponse;
 }
@@ -33,19 +33,24 @@ chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
   const url = tab.url;
   if (!url) return;
 
-  let oembed: OEmbedResponse;
-  try {
-    oembed = await fetchTweetEmbed(url);
-  } catch (error) {
-    console.error("Error fetching tweet embed:", error);
-    return;
-  }
-
   const tabId = tab.id;
   if (!tabId) return;
 
-  chrome.tabs.sendMessage(tabId, {
-    type: "copyTweetEmbedToClipboard",
-    html: oembed.html,
-  });
+  try {
+    const oembed = await fetchTweetEmbed(url);
+    chrome.tabs.sendMessage(tabId, {
+      type: "copyTweetEmbedToClipboard",
+      html: oembed.html,
+    });
+  } catch (error) {
+    let message = "Failed to fetch tweet embed.";
+    if (error instanceof Error) {
+      message += `\nError: ${error.message}`;
+    }
+    console.error(error);
+    chrome.tabs.sendMessage(tabId, {
+      type: "showErrorMessage",
+      message,
+    });
+  }
 });
