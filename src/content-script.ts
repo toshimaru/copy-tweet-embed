@@ -80,7 +80,7 @@ function createToast(message: string, isError = false): HTMLElement {
   // Style toast
   setStyles(toast, TOAST_STYLES);
   if (isError) {
-    setStyles(toast, { backgroundColor: "rgba(210, 50, 50, 0.9)" });
+    setStyles(toast, { backgroundColor: "rgba(210, 50, 50, 0.85)" });
   }
 
   return toast;
@@ -101,12 +101,15 @@ function showToast(message: string, isError = false) {
   void toast.offsetWidth;
 
   setStyles(toast, { opacity: "1" });
-  setTimeout(() => {
-    setStyles(toast, { opacity: "0" });
-    toast.addEventListener("transitionend", () => {
-      document.body.removeChild(toast);
-    });
-  }, 3000);
+  setTimeout(
+    () => {
+      setStyles(toast, { opacity: "0" });
+      toast.addEventListener("transitionend", () => {
+        document.body.removeChild(toast);
+      });
+    },
+    isError ? 5000 : 3000,
+  );
 }
 
 chrome.runtime.onMessage.addListener(async (msg: TweetEmbedMessage) => {
@@ -116,8 +119,12 @@ chrome.runtime.onMessage.addListener(async (msg: TweetEmbedMessage) => {
         await navigator.clipboard.writeText(msg.html);
         showToast("Copied to clipboard");
       } catch (error) {
-        console.error("Error copying to clipboard:", error);
-        showToast("Failed to copy to clipboard", true);
+        let message = "Failed to copy to clipboard.";
+        if (error instanceof Error) {
+          message += `\nError: ${error.message}`;
+        }
+        console.error(message);
+        showToast(message, true);
       }
       break;
     case "showErrorMessage":
